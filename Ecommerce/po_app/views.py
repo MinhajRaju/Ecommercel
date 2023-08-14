@@ -38,6 +38,13 @@ def All(request):
     return Response(serializer)
 
 
+@api_view(['GET','POST'])
+def Image(request):
+    product = Product_Image.objects.all()
+    serializer = ProductImageSerializer(product , many=True).data
+    return Response(serializer)
+
+
 
 
 @api_view(['GET','POST'])
@@ -46,26 +53,24 @@ def Create(request):
     data = request.data
     sellerinstance = Seller_Profile.objects.get(id=2)
 
-    productimageinstance = Product_Image.objects.filter(seller=sellerinstance)
-    img  = list(productimageinstance)
+    variation = [{"id":2,"color":"red","qty":12,"size":"50","product":5,"product_image_id":[16,17,18]},
+                 {"id":3,"color":"red","qty":30,"size":"50","product":5,"product_image_id":[19,20,21]}]
+
+    sumofqty = [v['qty'] for i  , v in enumerate(variation)]
 
 
-    variation = [{"id":2,"color":"red","qty":12,"size":"50","product":5,"product_image_id":[2,4,5]},
-                 {"id":3,"color":"red","qty":30,"size":"50","product":5,"product_image_id":[1,9,7]}]
-
-    totalqty = []
-    for i  , v  in enumerate(variation):
-        totalqty.append(v['qty'])
-    sumofqty   = sum(totalqty)
-
-
+    porductimg = [{"imgid":[16,20,21]}]
 
     productinstance = Product.objects.create(
         seller  = sellerinstance,
         title = data['title'],
-        product_image_id = img,
         totalqty = sumofqty
     )
+
+
+    for i in porductimg[0]['imgid']:
+        Product_Image.objects.filter(id=i).update(product=productinstance)
+
 
 
 
@@ -76,14 +81,16 @@ def Create(request):
 
         number  =  ramdomnum + i
         skunumber = str(productinstance.id) +"_BD-"+str(number)
-        Product_Variation.objects.create(
+        productvaritaioninstance = Product_Variation.objects.create(
             product = productinstance,
             color = value['color'],
             qty = value['qty'],
             size = value['size'],
-            product_image_id = value['product_image_id'],
             sku = skunumber,
         )
+
+        for  i in value['product_image_id']:
+            Product_Image.objects.filter(id=i).update(variation=productvaritaioninstance)
 
 
     product = Product.objects.all()
@@ -103,24 +110,17 @@ def Create(request):
 def Update(request):
 
     data = request.data
-    sellerinstance = Seller_Profile.objects.get(id=2)
 
-    productimageinstance = Product_Image.objects.filter(seller=sellerinstance)
-    img  = list(productimageinstance)
+    variation = [{"id":44,"color":"red","qty":12,"size":"50","product":5,"product_image_id":[19,20,21]},
+                 {"id":45,"color":"adfasfd","qty":30,"size":"50","product":5,"product_image_id":[16,17,18]}]
 
 
-    variation = [{"id":7,"color":"red","qty":12,"size":"50","product":5,"product_image_id":[2,4,5]},
-                 {"id":8,"color":"adfasfd","qty":30,"size":"50","product":5,"product_image_id":[1,9,7]}]
 
-    totalqty = []
-    for i  , v  in enumerate(variation):
-        totalqty.append(v['qty'])
-    sumofqty   = sum(totalqty)
+    sumofqty = [v['qty'] for i  , v in enumerate(variation)]
 
-    Product.objects.filter(id=8).update(
+    Product.objects.filter(id=29).update(
 
         title = data['title'],
-        product_image_id = img,
         totalqty = sumofqty
     )
 
@@ -132,9 +132,13 @@ def Update(request):
             color = value['color'],
             qty = value['qty'],
             size = value['size'],
-            product_image_id = value['product_image_id']
 
         )
+
+        for  i in value['product_image_id']:
+            Product_Image.objects.filter(id=i).update(variation=id)
+
+
 
 
     product = Product.objects.all()
@@ -147,16 +151,91 @@ def Update(request):
 @api_view(['GET','POST'])
 def RemoveImage(request):
 
-    productinstance  = Product.objects.all()
-    for i in productinstance:
-        if '11' in i.product_image_id:
-             k  = i.product_image_id
-             k.remove('11')
-             Product.objects.filter(id=i.id).update(product_image_id=k)
-    Product_Image.objects.get(id=11).delete()
+    idarray = [21,20]
 
-    product = Product.objects.all()
-    serializer = ProductSerializer(product , many=True).data
+    for i in idarray:
+        Product_Image.objects.filter(id=i).delete()
+
+    return Response()
+
+@api_view(['GET','POST'])
+def OrderItemSave(request):
+    data = request.data
+
+    customerinstance = Customer_Profile.objects.get(id=3)
+    shippingAddressinstance = shippingAddress.objects.get(id=1)
+
+    cartProduct = [{"product":32,"title":"masuda 2","qty":2,"mrp":0,"slug":"masuda-2","countInStock":700,"sellerId":2},
+    {"product":33,"title":"masuda","qty":2,"mrp":0,"slug":"masuda","countInStock":798,"sellerId":2},
+     {"product":32,"title":"masuda","qty":2,"mrp":0,"slug":"masuda","countInStock":798,"sellerId":6},]
+
+    x = [i['sellerId'] for i in cartProduct]
+    sellerid  = set(x)
+
+
+
+    for i in sellerid:
+
+        sellerinstance  = Seller_Profile.objects.get(id=i)
+
+        orderInstance = Order.objects.create(
+            customer = customerinstance,
+            shipping = shippingAddressinstance,
+            seller  = sellerinstance,
+            status = "Hold",
+            payment_status = "paid"
+        )
+
+
+
+        #lambda argument(s) : expression
+        x = filter(lambda cart: cart['sellerId'] == i , cartProduct)
+        itemlist = list(x)
+
+
+        for j in itemlist:
+
+            product = Product.objects.get(id=j['product'])
+
+            Order_Details.objects.create(
+                product = product,
+                order = orderInstance,
+                seller = sellerinstance
+
+            )
+
+
+
+
+
+
+    return Response()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@api_view(['GET' , 'POST'])
+def DetailsOrder(request):
+
+    order = Order.objects.all()
+    serializer = OrderSerailizer(order, many=True).data
     return Response(serializer)
-
-

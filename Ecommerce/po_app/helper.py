@@ -83,3 +83,7 @@ def slug_generator(sender , instance , *args , **kwargs ):
 def sku_generator(sender , instance , *args , **kwargs ):
     if not instance.sku:
         instance.sku = str(random.randint(1,10000))+ "_BD-" + str(random.randint(1,1000000))
+
+
+def order_no_generate():
+    return "007"  + str(random.randint(1,50000000))
