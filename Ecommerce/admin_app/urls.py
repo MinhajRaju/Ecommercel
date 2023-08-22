@@ -4,7 +4,8 @@ from admin_app import views
 
 urlpatterns = [
 
-    path('' , views.All  , name='All')
+    path('category/' , views.categoryNestedView  , name='All'),
+    path('topcategory/<int:number>/' , views.TopCategoryView  , name='All')
 
 
 ]

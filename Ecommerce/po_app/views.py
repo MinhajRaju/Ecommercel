@@ -47,6 +47,10 @@ def Image(request):
 
 
 
+
+
+
+
 @api_view(['GET','POST'])
 def Create(request):
 
@@ -76,6 +80,7 @@ def Create(request):
 
 
 
+
     ramdomnum = random.randint(1,100000)
     for i , value in enumerate(variation):
 
@@ -99,6 +104,15 @@ def Create(request):
 
 
 
+
+
+
+@api_view(['GET','POST'])
+def FlashSale(request):
+
+    flashsale = Product.objects.filter(flashsale=True)
+    serializer   = ProductSerializer(flashsale , many=True).data
+    return Response(serializer)
 
 
 
@@ -206,9 +220,6 @@ def OrderItemSave(request):
 
 
 
-
-
-
     return Response()
 
 
@@ -239,3 +250,16 @@ def DetailsOrder(request):
     order = Order.objects.all()
     serializer = OrderSerailizer(order, many=True).data
     return Response(serializer)
+
+@api_view(['GET' , 'POST'])
+def DashProduct(request , *args , **kwargs):
+
+    num_of_product = kwargs.get('num_product')
+    product = Product.objects.all()[0:num_of_product]
+    print(product)
+    serializer =  ProductSerializer(product , many=True).data
+    return Response(serializer)
+
+
+
+

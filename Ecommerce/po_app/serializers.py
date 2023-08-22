@@ -38,7 +38,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model =  Product
-        fields = ['id','seller','title','slug','sku','totalqty','variation' ,'image']
+        fields = ['id'  ,'seller','title','slug', 'flashsale' ,'sku','totalqty','variation' ,'image']
     def get_variation(self, obj):
         return ProductVariation(obj.product_variation_set.all() , many=True).data
     def get_image(self, obj):

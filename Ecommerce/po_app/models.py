@@ -15,6 +15,8 @@ class Product(models.Model):
     slug = models.SlugField(max_length=250 , null=True , blank=True)
     sku = models.CharField(max_length=150 , null=True , blank=True)
     totalqty=models.CharField(max_length=150 , null=True, blank=True)
+    flashsale = models.BooleanField(default=False , null=True , blank=True)
+    discount   = models.IntegerField(default = 0 , null=True , blank=True)
     #product_image_id  = ArrayField(models.IntegerField(max_length=200) , null=True , blank=True)
 
     def __str__(self):

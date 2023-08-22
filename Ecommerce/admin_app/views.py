@@ -22,11 +22,36 @@ from seller_app.serializers import *
 
 
 
+@api_view(['GET'])
+def categoryNestedView(request):
+    c = Category.objects.all()
+    serializer = CategoryNestedSerializer(c , many=True).data
+    return Response(serializer)
 
 
 
+@api_view(['GET'])
+def TopCategoryView(request , number):
+    c = Category.objects.filter(parent__isnull=True)
+    print(c)
+    c = list(c)
+
+    hitcounter = []
+    for i in c:
+        hitcounter.append(i.hitcount)
 
 
-@api_view(['GET','POST'])
-def All(request):
-    return Response("Hello world")
+    largenumberlist = []
+    for y in range(number):
+        largenumberlist.append(max(hitcounter))
+        hitcounter.remove(max(hitcounter))
+
+
+    product = []
+    for q in largenumberlist:
+         p  = Category.objects.get(hitcount=q)
+         product.append(p)
+
+
+    serializer = CategoryNestedSerializer( product, many=True).data
+    return Response(serializer)
