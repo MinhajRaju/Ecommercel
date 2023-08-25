@@ -133,7 +133,7 @@ MEDIA_URL = '/images/'
 STATICFILE_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+MEDIA_ROOT = os.path.join(BASE_DIR, '../frontend/public/assets/static/images')
 
 
 # Default primary key field type

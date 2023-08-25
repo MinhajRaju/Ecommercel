@@ -5,6 +5,7 @@ from po_app import views
 urlpatterns = [
 
     path('' , views.All  , name='All'),
+    path('singleproduct/<int:pk>/' , views.SingleProduct  , name='All'),
     path('create/' , views.Create  , name='Create'),
     path('removeimg/' , views.RemoveImage, name='RemoveImage'),
     path('update/' , views.Update  , name='Upadate'),

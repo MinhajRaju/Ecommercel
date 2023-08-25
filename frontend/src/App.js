@@ -4,21 +4,14 @@ import Dashboard from "./screens/_Dashboard"
 import store from "./store"
 import { NestedCategoryAction } from "./Actions/actions"
 import { connect } from "react-redux";
-
-
-const mapStateToProps = (state) => {
-
-  console.log(state)
-
-  return { FlashSaleData: state.FlashSaleReducer.FlashSaleData, ParentCategory: state.NestedcategoryReducer.NestedCategoryData, loading: state.FlashSaleReducer.loading }
+import HCF from "./screens/_HCF"
+import Test from "./screens/_Product"
+import Product from "./screens/_Product"
 
 
 
-}
 
-
-
-class App extends React.Component {
+export default class App extends React.Component {
 
 
   constructor(props) {
@@ -38,13 +31,23 @@ class App extends React.Component {
         <Router>
 
 
+
+
+
+
           <Routes>
 
+            <Route element={< HCF />}>
 
-            <Route exact path="/" element={<Dashboard data={this.props.ParentCategory} />} />
+              <Route exact path="/" element={<Dashboard />} />
+              <Route exact path="/product" element={<Product />} />
+
+            </Route>
 
 
           </Routes>
+
+
 
 
 
@@ -60,4 +63,3 @@ class App extends React.Component {
 }
 
 
-export default connect(mapStateToProps)(App)

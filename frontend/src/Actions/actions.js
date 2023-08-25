@@ -16,7 +16,11 @@ import {
 
     DASH_PRODUCT_REQUEST,
     DASH_PRODUCT_SUCCESS,
-    DASH_PRODUCT_FAIL
+    DASH_PRODUCT_FAIL,
+
+    SINGLE_PRODUCT_REQUEST,
+    SINGLE_PRODUCT_SUCCESS,
+    SINGLE_PRODUCT_FAIL
 
 } from "../Constants/constants"
 import axios from 'axios'
@@ -161,6 +165,46 @@ export const DashProductAction = () => async (dispatch) => {
 
 
 }
+
+
+
+
+
+
+export const SingleProductAction = (id) => async (dispatch) => {
+
+    try {
+        dispatch({
+            type: SINGLE_PRODUCT_REQUEST
+        })
+        const config = {
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }
+
+
+        const { data } = await axios.get(`/api/po/singleproduct/${id}`, config)
+
+        dispatch({
+            type: SINGLE_PRODUCT_SUCCESS,
+            payload: data
+        })
+
+    }
+    catch (error) {
+
+        dispatch({
+            type: SINGLE_PRODUCT_FAIL,
+            payload: error.response && error.response.data.detail ? error.response.data.detail : error.message,
+
+        })
+
+    }
+
+
+}
+
 
 
 

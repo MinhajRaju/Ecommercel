@@ -19,21 +19,13 @@ export default class ProductCard extends React.Component {
 
                                     <div class="text-center position-relative ">
                                         <div class=" position-absolute top-0 start-0">
-                                            <span class="badge bg-danger">Sale</span>
+                                            <span class="badge bg-danger">{this.props.tag}</span>
                                         </div>
 
                                         <a href="#!"> <img src="../assets/images/products/product-img-15.jpg"
                                             alt="Grocery Ecommerce Template" class="mb-3 img-fluid" /></a>
 
-                                        <div class="card-product-action">
-                                            <a href="#!" class="btn-action" data-bs-toggle="modal"
-                                                data-bs-target="#quickViewModal"><i class="bi bi-eye"
-                                                    data-bs-toggle="tooltip" data-bs-html="true" title="Quick View"></i></a>
-                                            <a href="shop-wishlist.html" class="btn-action" data-bs-toggle="tooltip" data-bs-html="true"
-                                                title="Wishlist"><i class="bi bi-heart"></i></a>
-                                            <a href="#!" class="btn-action" data-bs-toggle="tooltip" data-bs-html="true"
-                                                title="Compare"><i class="bi bi-arrow-left-right"></i></a>
-                                        </div>
+
                                     </div>
 
                                     <div class="text-small mb-1"><a href="#!"

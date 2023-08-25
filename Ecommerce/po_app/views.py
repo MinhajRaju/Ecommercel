@@ -38,6 +38,15 @@ def All(request):
     return Response(serializer)
 
 
+
+
+
+@api_view(['GET','POST'])
+def SingleProduct(request , pk):
+    product = Product.objects.get(id=pk)
+    serializer = ProductSerializer(product , many=False).data
+    return Response(serializer)
+
 @api_view(['GET','POST'])
 def Image(request):
     product = Product_Image.objects.all()

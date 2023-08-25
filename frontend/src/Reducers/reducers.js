@@ -13,7 +13,11 @@ import {
 
     DASH_PRODUCT_REQUEST,
     DASH_PRODUCT_SUCCESS,
-    DASH_PRODUCT_FAIL
+    DASH_PRODUCT_FAIL,
+
+    SINGLE_PRODUCT_REQUEST,
+    SINGLE_PRODUCT_SUCCESS,
+    SINGLE_PRODUCT_FAIL
 
 } from "../Constants/constants"
 
@@ -73,6 +77,23 @@ export const DashProductReducer = (state = {}, action) => {
         case DASH_PRODUCT_SUCCESS:
             return { loading: false, DashProductData: action.payload }
         case DASH_PRODUCT_FAIL:
+            return { loading: false, error: action.payload }
+        default:
+            return state
+    }
+
+
+}
+
+
+export const SingleProductReducer = (state = {}, action) => {
+
+    switch (action.type) {
+        case SINGLE_PRODUCT_REQUEST:
+            return { loading: true }
+        case SINGLE_PRODUCT_SUCCESS:
+            return { loading: false, SingleProductData: action.payload }
+        case SINGLE_PRODUCT_FAIL:
             return { loading: false, error: action.payload }
         default:
             return state
